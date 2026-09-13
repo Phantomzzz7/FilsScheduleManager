@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.Input;
+using System;
 
 namespace FSM.ViewModels
 {
@@ -24,11 +25,35 @@ namespace FSM.ViewModels
         [ObservableProperty]
         private string newCourseRoom = string.Empty;
 
+        [ObservableProperty]
+        private ObservableCollection<ScheduleItem> scheduleItems = new();
+
+        [ObservableProperty]
+        private Course? selectedCourse;
+
+        [ObservableProperty]
+        private DayOfWeek selectedDay = DayOfWeek.Monday;
+
+        [ObservableProperty]
+        private string newActivityType = string.Empty;
+
+        [ObservableProperty]
+        private string startTimeText = string.Empty;
+
+        [ObservableProperty]
+        private string endTimeText = string.Empty;
+
         public MainViewModel()
         {
             db = new AppDbContext();
             db.Database.Migrate();
             LoadCourses();
+            LoadScheduleItems();
+        }
+
+        private void LoadScheduleItems()
+        {
+            ScheduleItems = new ObservableCollection<ScheduleItem>(db.ScheduleItems.ToList());
         }
 
         private void LoadCourses()

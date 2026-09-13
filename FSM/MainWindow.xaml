@@ -11,13 +11,24 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBox Text="{Binding NewCourseName, UpdateSourceTrigger=PropertyChanged}" Width="150" Height="28"/>
-                <TextBox Text="{Binding NewCourseProfessor, UpdateSourceTrigger=PropertyChanged}" Width="150" Height="28" Margin="10,0,0,0"/>
-                <TextBox Text="{Binding NewCourseRoom, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="28" Margin="10,0,0,0"/>
+                <TextBox Text="{Binding NewCourseName, UpdateSourceTrigger=PropertyChanged}"
+             Style="{StaticResource PlaceholderTextBox}"
+             Tag="Course name"
+             Width="150" Height="28"/>
+                <TextBox Text="{Binding NewCourseProfessor, UpdateSourceTrigger=PropertyChanged}"
+             Style="{StaticResource PlaceholderTextBox}"
+             Tag="Professor"
+             Width="150" Height="28" Margin="10,0,0,0"/>
+                <TextBox Text="{Binding NewCourseRoom, UpdateSourceTrigger=PropertyChanged}"
+             Style="{StaticResource PlaceholderTextBox}"
+             Tag="Room"
+             Width="100" Height="28" Margin="10,0,0,0"/>
                 <Button Content="Add Course" Command="{Binding AddCourseCommand}" Width="100" Height="28" Margin="10,0,0,0"/>
             </StackPanel>
 
@@ -35,6 +46,49 @@
                     CommandParameter="{Binding}"
                     Width="70"
                     Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,15,0,10">
+                <ComboBox ItemsSource="{Binding Courses}"
+                          SelectedItem="{Binding SelectedCourse}"
+                          DisplayMemberPath="Name"
+                          Width="150" Height="28"/>
+                <ComboBox ItemsSource="{Binding DaysOfWeek}"
+                          SelectedItem="{Binding SelectedDay}"
+                          Width="100" Height="28" Margin="10,0,0,0"/>
+                <TextBox Text="{Binding NewActivityType, UpdateSourceTrigger=PropertyChanged}"
+         Style="{StaticResource PlaceholderTextBox}"
+         Tag="Activity type (e.g. Course)"
+         Width="150" Height="28" Margin="10,0,0,0"/>
+
+                <TextBox Text="{Binding StartTimeText, UpdateSourceTrigger=PropertyChanged}"
+         Style="{StaticResource PlaceholderTextBox}"
+         Tag="10:00"
+         Width="60" Height="28" Margin="10,0,0,0"/>
+
+                <TextBox Text="{Binding EndTimeText, UpdateSourceTrigger=PropertyChanged}"
+         Style="{StaticResource PlaceholderTextBox}"
+         Tag="12:00"
+         Width="60" Height="28" Margin="10,0,0,0"/>
+                <Button Content="Add Schedule Item" Command="{Binding AddScheduleItemCommand}" Width="130" Height="28" Margin="10,0,0,0"/>
+            </StackPanel>
+
+            <ListBox Grid.Row="4" ItemsSource="{Binding ScheduleItems}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Day}" Width="80" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding ActivityType}" Width="100"/>
+                            <TextBlock Text="{Binding StartTime}" Width="60"/>
+                            <TextBlock Text="{Binding EndTime}" Width="60"/>
+                            <Button Content="Delete"
+                        Command="{Binding DataContext.DeleteScheduleItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        CommandParameter="{Binding}"
+                        Width="70"
+                        Margin="10,0,0,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

@@ -62,6 +62,49 @@ namespace FSM.ViewModels
         }
 
         [RelayCommand]
+        private void AddScheduleItem()
+        {
+            if (SelectedCourse == null)
+                return;
+
+            if (!TimeSpan.TryParse(StartTimeText, out TimeSpan startTime))
+                return;
+
+            if (!TimeSpan.TryParse(EndTimeText, out TimeSpan endTime))
+                return;
+
+            var item = new ScheduleItem
+            {
+                CourseID = SelectedCourse.ID,
+                ActivityType = NewActivityType,
+                Day = SelectedDay,
+                StartTime = startTime,
+                EndTime = endTime
+            };
+
+            db.ScheduleItems.Add(item);
+            db.SaveChanges();
+
+            NewActivityType = string.Empty;
+            StartTimeText = string.Empty;
+            EndTimeText = string.Empty;
+
+            LoadScheduleItems();
+        }
+
+        [RelayCommand]
+        private void DeleteScheduleItem(ScheduleItem item)
+        {
+            if (item == null)
+                return;
+
+            db.ScheduleItems.Remove(item);
+            db.SaveChanges();
+
+            LoadScheduleItems();
+        }
+
+        [RelayCommand]
         private void AddCourse()
         {
             if (string.IsNullOrWhiteSpace(newCourseName))
@@ -91,6 +134,7 @@ namespace FSM.ViewModels
             db.SaveChanges();
 
             LoadCourses();
-        }
+        }  
+        public Array DaysOfWeek => Enum.GetValues(typeof(DayOfWeek));
     }
 }

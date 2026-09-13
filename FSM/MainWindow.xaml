@@ -5,13 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FSM"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="850">
     <Grid>
         <Grid Margin="15">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="150"/>
+                <RowDefinition Height="120"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="120"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -89,6 +91,49 @@
                         CommandParameter="{Binding}"
                         Width="70"
                         Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,15,0,10">
+                <ComboBox ItemsSource="{Binding Courses}"
+              SelectedItem="{Binding SelectedCourseForAssignment}"
+              DisplayMemberPath="Name"
+              Width="150" Height="28"/>
+                <TextBox Text="{Binding NewAssignmentTitle, UpdateSourceTrigger=PropertyChanged}"
+             Style="{StaticResource PlaceholderTextBox}"
+             Tag="Assignment title"
+             Width="200" Height="28" Margin="10,0,0,0"/>
+                <TextBox Text="{Binding DueDateText, UpdateSourceTrigger=PropertyChanged}"
+             Style="{StaticResource PlaceholderTextBox}"
+             Tag="2026-10-15"
+             Width="100" Height="28" Margin="10,0,0,0"/>
+                <Button Content="Add Assignment" Command="{Binding AddAssignmentCommand}" Width="120" Height="28" Margin="10,0,0,0"/>
+            </StackPanel>
+
+            <ListBox Grid.Row="6" ItemsSource="{Binding Assignments}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+                            <CheckBox IsChecked="{Binding IsCompleted, Mode=OneWay}"
+                          Command="{Binding DataContext.ToggleAssignmentCompletedCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                          CommandParameter="{Binding}"
+                          VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Name}" Width="180" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding DueDate, StringFormat=d}" Width="80" VerticalAlignment="Center"/>
+                            <TextBlock Width="70" VerticalAlignment="Center" FontWeight="Bold">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource AssignmentStatusConverter}">
+                                        <Binding Path="DueDate"/>
+                                        <Binding Path="IsCompleted"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <Button Content="Delete"
+                        Command="{Binding DataContext.DeleteAssignmentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        CommandParameter="{Binding}"
+                        Width="60"
+                        Margin="6,0,0,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

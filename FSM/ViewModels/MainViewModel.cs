@@ -43,12 +43,25 @@ namespace FSM.ViewModels
         [ObservableProperty]
         private string endTimeText = string.Empty;
 
+        [ObservableProperty]
+        private ObservableCollection<Assignment> assignments = new();
+
+        [ObservableProperty]
+        private Course? selectedCourseForAssignment;
+
+        [ObservableProperty]
+        private string newAssignmentTitle = string.Empty;
+
+        [ObservableProperty]
+        private string dueDateText = string.Empty;
+
         public MainViewModel()
         {
             db = new AppDbContext();
             db.Database.Migrate();
             LoadCourses();
             LoadScheduleItems();
+            LoadAssignments();
         }
 
         private void LoadScheduleItems()
@@ -59,6 +72,10 @@ namespace FSM.ViewModels
         private void LoadCourses()
         {
             Courses = new ObservableCollection<Course>(db.Courses.ToList());
+        }
+        private void LoadAssignments()
+        {
+            Assignments = new ObservableCollection<Assignment>(db.Assignments.ToList());
         }
 
         [RelayCommand]
@@ -103,24 +120,71 @@ namespace FSM.ViewModels
 
             LoadScheduleItems();
         }
+        [RelayCommand]
+        private void AddAssignment()
+        {
+            if (SelectedCourseForAssignment == null)
+                return;
+
+            if (!DateTime.TryParse(DueDateText, out DateTime dueDate))
+                return;
+
+            var assignment = new Assignment
+            {
+                CourseID = SelectedCourseForAssignment.ID,
+                Name = NewAssignmentTitle,
+                DueDate = dueDate,
+                IsCompleted = false
+            };
+
+            db.Assignments.Add(assignment);
+            db.SaveChanges();
+
+            NewAssignmentTitle = string.Empty;
+            DueDateText = string.Empty;
+
+            LoadAssignments();
+        }
+
+        [RelayCommand]
+        private void DeleteAssignment(Assignment assignment)
+        {
+            if (assignment == null)
+                return;
+
+            db.Assignments.Remove(assignment);
+            db.SaveChanges();
+
+            LoadAssignments();
+        }
+
+        [RelayCommand]
+        private void ToggleAssignmentCompleted(Assignment assignment)
+        {
+            if (assignment == null)
+                return;
+
+            assignment.IsCompleted = !assignment.IsCompleted;
+            db.SaveChanges();
+        }
 
         [RelayCommand]
         private void AddCourse()
         {
-            if (string.IsNullOrWhiteSpace(newCourseName))
+            if (string.IsNullOrWhiteSpace(NewCourseName))
                 return;
             var course = new Course
             {
-                Name = newCourseName,
-                Professor = newCourseProfessor,
-                Room = newCourseRoom
+                Name = NewCourseName,
+                Professor = NewCourseProfessor,
+                Room = NewCourseRoom
             };
             db.Courses.Add(course);
             db.SaveChanges();
 
-            newCourseName = string.Empty;
-            newCourseProfessor = string.Empty;
-            newCourseRoom = string.Empty;
+            NewCourseName = string.Empty;
+            NewCourseProfessor = string.Empty;
+            NewCourseRoom = string.Empty;
 
             LoadCourses();
         }

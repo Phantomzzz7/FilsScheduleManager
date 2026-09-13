@@ -2,8 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:FSM"
+             xmlns:converters="clr-namespace:FSM.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <converters:AssignmentStatusConverter x:Key="AssignmentStatusConverter"/>
         <Style x:Key="PlaceholderTextBox" TargetType="TextBox">
             <Setter Property="Template">
                 <Setter.Value>

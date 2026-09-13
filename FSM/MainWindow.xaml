@@ -29,7 +29,12 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Name}" FontWeight="Bold" Width="200"/>
                             <TextBlock Text="{Binding Professor}" Width="150"/>
-                            <TextBlock Text="{Binding Room}"/>
+                            <TextBlock Text="{Binding Room}" Width="100"/>
+                            <Button Content="Delete"
+                    Command="{Binding DataContext.DeleteCourseCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                    CommandParameter="{Binding}"
+                    Width="70"
+                    Margin="10,0,0,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

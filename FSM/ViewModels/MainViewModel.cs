@@ -56,5 +56,16 @@ namespace FSM.ViewModels
 
             LoadCourses();
         }
+        [RelayCommand]
+        private void DeleteCourse(Course course)
+        {
+            if (course == null)
+                return;
+
+            db.Courses.Remove(course);
+            db.SaveChanges();
+
+            LoadCourses();
+        }
     }
 }

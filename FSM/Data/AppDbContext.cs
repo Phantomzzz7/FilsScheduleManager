@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FSM.Models;
-
+using System.IO;
 namespace FSM.Data
 {
     public class AppDbContext : DbContext
@@ -12,7 +12,8 @@ namespace FSM.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=fils_schedule.db"); 
+            string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "fils_schedule.db");
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
         }
     }
 }
